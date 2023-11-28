@@ -1,0 +1,59 @@
+﻿
+.login-header {
+    color: #333;
+    text-align: center;
+}
+
+
+.error-message {
+    color: red;
+    text-align: center;
+}
+
+
+.login-container {
+    width: 300px;
+    margin: 0 auto;
+}
+
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+
+.form-label {
+    color: #333;
+}
+
+
+.form-input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+
+.custom-button {
+    background-color: #80bb34;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+   
+}
+
+
+.container {
+    border: 2px solid green;
+    padding: 20px;
+    border-radius: 8px;
+    width: 500px;
+}
+.forgot {
+    text-decoration: underline;
+    color: green;
+}

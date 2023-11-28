@@ -1,0 +1,44 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+
+<h1 class="login-header">Ingresar Credenciales</h1>
+
+@if (errorMessage != null)
+{
+    <p class="error-message">@errorMessage</p>
+}
+
+
+<div  class="container">
+    <div class="login-container">
+        <div class="form-group">
+            <label class="form-label">Correo:</label>
+            <input @bind="email" class="form-input" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Cotraseña:</label>
+            <input type="password" @bind="password" class="form-input" />
+        </div>
+        <div class="form-group">
+            <label class="forgot">Se ha olvidado la contraseña</label>
+        </div>
+
+        <button @onclick="RedirectPage" class="custom-button">
+            Aceptar
+        </button>
+    </div>
+
+</div>
+
+
+@code {
+    private string email;
+    private string password;
+    private string errorMessage;
+
+    private void RedirectPage()
+    {
+        NavigationManager.NavigateTo("/fetchdata");
+    }
+}
