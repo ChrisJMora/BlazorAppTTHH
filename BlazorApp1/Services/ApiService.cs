@@ -26,15 +26,15 @@ namespace BlazorApp1.Services
             return _instancia;
         }
 
-        public async Task<List<TipoOperacion>?> ObtenerEmisores()
+        public async Task<List<Emisor>?> ObtenerEmisores()
         {
-            HttpResponseMessage response = await client.GetAsync(_url + "api/Varios/TipoOperacion");
+            HttpResponseMessage response = await client.GetAsync(_url + "api/Varios/GetEmisor");
             if (response.IsSuccessStatusCode)
             {
                 // JSON como string
                 string json = await response.Content.ReadAsStringAsync();
                 // Deserializar el JSON a una lista 
-                List<TipoOperacion>? datos = JsonConvert.DeserializeObject<List<TipoOperacion>>(json);
+                List<Emisor>? datos = JsonConvert.DeserializeObject<List<Emisor>>(json);
                 if (datos != null) return datos;
             }
             return null;

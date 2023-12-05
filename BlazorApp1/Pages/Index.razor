@@ -32,8 +32,7 @@
                 {
                     foreach(var emisor in emisores)
                     {
-                        <option>@emisor.CodigoTipooperacion</option>
-                        <option>@emisor.NombreOperacion</option>
+                        <option>@emisor.Codigo @emisor.NombreEmisor</option>
                     }
    
                 }
@@ -57,7 +56,7 @@
     private string? password;
     private string? errorMessage;
 
-    private List<TipoOperacion>? emisores;
+    private List<Emisor>? emisores;
 
     protected override async Task OnInitializedAsync()
     {
