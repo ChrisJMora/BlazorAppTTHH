@@ -1,6 +1,11 @@
 ﻿@page "/"
 @inject NavigationManager NavigationManager
 
+@{
+    @using BlazorApp1.Services;
+    @using BlazorApp1.Models;
+}
+
 <h1 class="login-header">Ingresar Credenciales</h1>
 
 @if (errorMessage != null)
@@ -20,6 +25,21 @@
             <label class="form-label">Cotraseña:</label>
             <input type="password" @bind="password" class="form-input" />
         </div>
+
+        <div>
+            <select>
+                @if (emisores != null)
+                {
+                    foreach(var emisor in emisores)
+                    {
+                        <option>@emisor.CodigoTipooperacion</option>
+                        <option>@emisor.NombreOperacion</option>
+                    }
+   
+                }
+            </select>
+        </div>
+
         <div class="form-group">
             <label class="forgot">Se ha olvidado la contraseña</label>
         </div>
@@ -33,9 +53,16 @@
 
 
 @code {
-    private string email;
-    private string password;
-    private string errorMessage;
+    private string? email;
+    private string? password;
+    private string? errorMessage;
+
+    private List<TipoOperacion>? emisores;
+
+    protected override async Task OnInitializedAsync()
+    {
+        emisores = await ApiService.Singleton().ObtenerEmisores();
+    }
 
     private void RedirectPage()
     {
