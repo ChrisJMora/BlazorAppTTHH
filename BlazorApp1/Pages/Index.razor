@@ -13,47 +13,49 @@
     <p class="error-message">@errorMessage</p>
 }
 
+<EditForm model="@usuario" OnValidSubmit="@RedirectPage">
+    <DataAnnotationsValidator />
 
-<div  class="container">
-    <div class="login-container">
-        <div class="form-group">
-            <label class="form-label">Correo:</label>
-            <input @bind="email" class="form-input" />
-        </div>
+    <div  class="container">
+        <div class="login-container">
+            <div class="form-group">
+                <label for="Email" class="form-label">Correo:</label>
+                <InputText id="Email" @bind-Value="usuario.Email" class="form-input" />
+                <ValidationMessage For="@(() => usuario.Email)" /> 
+            </div>
 
-        <div class="form-group">
-            <label class="form-label">Cotraseña:</label>
-            <input type="password" @bind="password" class="form-input" />
-        </div>
+            <div class="form-group">
+                <label for="Password" class="form-label">Contraseña:</label>
+                <InputText type="password" id="Password" @bind-Value="usuario.Password" class="form-input" />
+                <ValidationMessage For="@(() => usuario.Password)" /> 
+            </div>
 
-        <div>
-            <select>
-                @if (emisores != null)
-                {
-                    foreach(var emisor in emisores)
+            <div>
+                <select>
+                    @if (emisores != null)
                     {
-                        <option>@emisor.Codigo @emisor.NombreEmisor</option>
-                    }
+                        foreach(var emisor in emisores)
+                        {
+                            <option>@emisor.Codigo @emisor.NombreEmisor</option>
+                        }
    
-                }
-            </select>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="forgot">Se ha olvidado la contraseña</label>
+            </div>
+
+            <button type="submit" class="custom-button"> Aceptar </button>
         </div>
 
-        <div class="form-group">
-            <label class="forgot">Se ha olvidado la contraseña</label>
-        </div>
-
-        <button @onclick="RedirectPage" class="custom-button">
-            Aceptar
-        </button>
     </div>
-
-</div>
+</EditForm>
 
 
 @code {
-    private string? email;
-    private string? password;
+    private Usuario usuario = new Usuario();
     private string? errorMessage;
 
     private List<Emisor>? emisores;
@@ -63,8 +65,27 @@
         emisores = await ApiService.Singleton().ObtenerEmisores();
     }
 
+    private bool ValidateCredentials(string email, string password)
+    {
+        if (!string.IsNullOrEmpty(email.Trim()) || !string.IsNullOrEmpty(password.Trim()))
+        {
+            //Poner aqui la petición http para validar las credenciales
+
+            return true;
+        } 
+        return false;
+        
+
+    }
+
     private void RedirectPage()
     {
-        NavigationManager.NavigateTo("/fetchdata");
+        if (ValidateCredentials(usuario.Email, usuario.Password))
+        {
+            NavigationManager.NavigateTo("/fetchdata");
+        } else
+        {
+            errorMessage = "Credenciales incorrectas! Por favor, intente de nuevo";
+        }
     }
 }
