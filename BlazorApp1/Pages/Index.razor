@@ -13,8 +13,7 @@
     <p class="error-message">@errorMessage</p>
 }
 
-
-<div  class="container">
+<div class="container">
     <div class="login-container">
         <div class="form-group">
             <label class="form-label">Correo:</label>
@@ -22,7 +21,7 @@
         </div>
 
         <div class="form-group">
-            <label class="form-label">Cotraseña:</label>
+            <label class="form-label">Contraseña:</label>
             <input type="password" @bind="password" class="form-input" />
         </div>
 
@@ -30,11 +29,10 @@
             <select>
                 @if (emisores != null)
                 {
-                    foreach(var emisor in emisores)
+                    foreach (var emisor in emisores)
                     {
                         <option>@emisor.Codigo @emisor.NombreEmisor</option>
                     }
-   
                 }
             </select>
         </div>
@@ -47,9 +45,19 @@
             Aceptar
         </button>
     </div>
-
 </div>
 
+@if (showPopup)
+{
+    <div class="popup">
+        <div class="popup-content">
+            <span class="close" @onclick="ClosePopup">&times;</span>
+            <p>User Information:</p>
+            <p>Name: @userInfo?.NombreUsuario</p>
+            <p>Profile: @userInfo?.Perfil</p>
+        </div>
+    </div>
+}
 
 @code {
     private string? email;
@@ -57,14 +65,22 @@
     private string? errorMessage;
 
     private List<Emisor>? emisores;
+    private bool showPopup = false;
+    private Usuario? userInfo;
 
     protected override async Task OnInitializedAsync()
     {
         emisores = await ApiService.Singleton().ObtenerEmisores();
     }
 
-    private void RedirectPage()
+    private async Task RedirectPage()
     {
-        NavigationManager.NavigateTo("/fetchdata");
+        userInfo = await ApiService.Singleton().ObtenerUsuario(email, password);
+        showPopup = true;
+    }
+
+    private void ClosePopup()
+    {
+        showPopup = false;
     }
 }

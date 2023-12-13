@@ -40,5 +40,17 @@ namespace BlazorApp1.Services
             return null;
         }
 
+        public async Task<Usuario?> ObtenerUsuario(String user,String password)
+        {
+            HttpResponseMessage response = await client.GetAsync(_url + $"api/Usuarios?usuario={user}&password={password}");
+            if (response.IsSuccessStatusCode)
+            {
+                string json = await response.Content.ReadAsStringAsync();
+                Usuario? datos = JsonConvert.DeserializeObject<Usuario>(json);
+                if (datos != null) return datos;
+            }
+            return null;
+        }
+
     }
 }
