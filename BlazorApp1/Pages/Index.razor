@@ -13,58 +13,76 @@
     <p class="error-message">@errorMessage</p>
 }
 
+<form @onsubmit="HandleFormSubmit">
+    <div class="container">
+        <div class="login-container">
+            <div class="form-group">
+                <label class="form-label">Correo:</label>
+                <input @bind="email" class="form-input" />
+            </div>
 
-<div  class="container">
-    <div class="login-container">
-        <div class="form-group">
-            <label class="form-label">Correo:</label>
-            <input @bind="email" class="form-input" />
-        </div>
+            <div class="form-group">
+                <label class="form-label">Contraseña:</label>
+                <input type="password" @bind="password" class="form-input" />
+            </div>
 
-        <div class="form-group">
-            <label class="form-label">Cotraseña:</label>
-            <input type="password" @bind="password" class="form-input" />
-        </div>
-
-        <div>
-            <select>
-                @if (emisores != null)
-                {
-                    foreach(var emisor in emisores)
+            <div>
+                <select>
+                    @if (emisores != null)
                     {
-                        <option>@emisor.Codigo @emisor.NombreEmisor</option>
+                        foreach (var emisor in emisores)
+                        {
+                            <option>@emisor.Codigo @emisor.NombreEmisor</option>
+                        }
                     }
-   
-                }
-            </select>
-        </div>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label class="forgot">Se ha olvidado la contraseña</label>
-        </div>
+            <div class="form-group">
+                <label class="forgot">Se ha olvidado la contraseña</label>
+            </div>
 
-        <button @onclick="RedirectPage" class="custom-button">
-            Aceptar
-        </button>
+            <button type="submit" class="custom-button">
+                Aceptar
+            </button>
+        </div>
     </div>
+</form>
 
-</div>
-
+@if (showPopup)
+{
+    <div class="popup">
+        <div class="popup-content">
+            <span class="close" @onclick="ClosePopup">&times;</span>
+            <p>User Information:</p>
+            <p>Name: @userInfo?.NombreUsuario</p>
+            <p>Profile: @userInfo?.Perfil</p>
+        </div>
+    </div>
+}
 
 @code {
     private string? email;
     private string? password;
     private string? errorMessage;
-
     private List<Emisor>? emisores;
+    private bool showPopup = false;
+    private Usuario userInfo;
 
     protected override async Task OnInitializedAsync()
     {
         emisores = await ApiService.Singleton().ObtenerEmisores();
     }
 
-    private void RedirectPage()
+    private async Task HandleFormSubmit()
+    {
+        userInfo = await ApiService.Singleton().ObtenerUsuario(email, password);
+        showPopup = true;
+    }
+
+    private void ClosePopup()
     {
         NavigationManager.NavigateTo("/fetchdata");
+        showPopup = false;
     }
 }
