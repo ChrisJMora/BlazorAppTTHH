@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿namespace BlazorApp1.Models
 {
     public class Usuario
@@ -16,4 +17,21 @@
         public string RucUsuario { get; set; }
     }
 
+=======
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace BlazorApp1.Models
+{
+    public class Usuario
+    {
+        [Required(ErrorMessage = "La dirección de correo es obligatoria.")]
+        [EmailAddress(ErrorMessage = "La dirección de correo electrónico no es válida.")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
+        [PasswordPropertyText]
+        public string Password { get; set; }
+    }
+>>>>>>> b75ce1a1b6af9812190ff65d525c924f9655986f
 }

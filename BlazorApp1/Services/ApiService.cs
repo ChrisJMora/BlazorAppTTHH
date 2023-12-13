@@ -40,6 +40,7 @@ namespace BlazorApp1.Services
             return null;
         }
 
+<<<<<<< HEAD
         public async Task<Usuario?> ObtenerUsuario(String user,String password)
         {
             HttpResponseMessage response = await client.GetAsync(_url + $"api/Usuarios?usuario={user}&password={password}");
@@ -51,6 +52,9 @@ namespace BlazorApp1.Services
             }
             return null;
         }
+=======
+
+>>>>>>> b75ce1a1b6af9812190ff65d525c924f9655986f
 
     }
 }
