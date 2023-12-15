@@ -1,47 +1,48 @@
 ﻿@page "/fetchdata"
 @using BlazorApp1.Data
-@inject WeatherForecastService ForecastService
-
-<PageTitle>Weather forecast</PageTitle>
-
-<h1>Weather forecast</h1>
-
-<p>This component demonstrates fetching data from a service.</p>
-
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
+@inject NavigationManager NavigationManager
+@{
+    @using BlazorApp1.Services;
+    @using BlazorApp1.Models;
 }
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+
+<PageTitle>Información del cliente</PageTitle>
+
+<header class="encloseBox">
+    <h1>Bienvenido, @userInfo?.NombreUsuario</h1>
+</header>
+
+<div>
+    <h3>Informacion del cliente</h3>
+    <p>Email: @email</p>
+    <p>Password: @password</p>
+</div>
+
+<footer class="encloseBox">
+    <h3>@userInfo.Cargo</h3>
+</footer>
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private string email = string.Empty;
+    private string password = string.Empty;
+    private Usuario userInfo;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateOnly.FromDateTime(DateTime.Now));
+        // Obtener los parámetros de la URL
+        var uri = new Uri(NavigationManager.Uri);
+        var queryParameters = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        // Obtener los valores de los parámetros si existen en la URL
+        if (queryParameters.AllKeys.Contains("email"))
+        {
+            email = queryParameters["email"];
+        }
+        if (queryParameters.AllKeys.Contains("password"))
+        {
+            password = queryParameters["password"];
+        }
+        userInfo = await ApiService.Singleton().ObtenerUsuario(email, password);
     }
 }
+

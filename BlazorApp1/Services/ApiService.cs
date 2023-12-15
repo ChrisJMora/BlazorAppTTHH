@@ -46,8 +46,9 @@ namespace BlazorApp1.Services
             if (response.IsSuccessStatusCode)
             {
                 string json = await response.Content.ReadAsStringAsync();
-                Usuario? datos = JsonConvert.DeserializeObject<Usuario>(json);
-                if (datos != null) return datos;
+                Console.WriteLine(json + "json1");
+                List<Usuario>? datos = JsonConvert.DeserializeObject<List<Usuario>>(json);
+                if (datos != null) return datos[0];
             }
             return null;
         }

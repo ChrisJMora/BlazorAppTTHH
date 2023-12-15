@@ -27,12 +27,12 @@
             </div>
 
             <div>
-                <select>
+                <select @bind="selectedEmisor">
                     @if (emisores != null)
                     {
                         foreach (var emisor in emisores)
                         {
-                            <option>@emisor.Codigo @emisor.NombreEmisor</option>
+                            <option value="@emisor.Codigo">@emisor.Codigo @emisor.NombreEmisor</option>
                         }
                     }
                 </select>
@@ -51,15 +51,18 @@
 
 @if (showPopup)
 {
-    <div class="popup">
-        <div class="popup-content">
-            <span class="close" @onclick="ClosePopup">&times;</span>
-            <p>User Information:</p>
-            <p>Name: @userInfo?.NombreUsuario</p>
-            <p>Profile: @userInfo?.Perfil</p>
+    <div class="popup-overlay">
+        <div class="popup">
+            <button class="close-button" @onclick="ClosePopup">&times;</button>
+            <div class="popup-content">
+                <h2>User Information:</h2>
+                <p><strong>Name:</strong> @userInfo?.NombreUsuario</p>
+                <p><strong>Profile:</strong> @userInfo?.Perfil</p>
+            </div>
         </div>
     </div>
 }
+
 
 @code {
     private string? email;
@@ -68,6 +71,7 @@
     private List<Emisor>? emisores;
     private bool showPopup = false;
     private Usuario userInfo;
+    private int? selectedEmisor;
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,13 +80,23 @@
 
     private async Task HandleFormSubmit()
     {
+        Console.WriteLine(selectedEmisor + "selcted" + userInfo);
         userInfo = await ApiService.Singleton().ObtenerUsuario(email, password);
-        showPopup = true;
+        if (userInfo.Observacion == "INGRESO EXITOSO" || userInfo.Compania == selectedEmisor)
+        {
+            showPopup = true;
+        }
+        else
+        {
+            errorMessage = "El usuario no tiene acceso a este emisor.";
+        }
+        
+
     }
 
     private void ClosePopup()
     {
-        NavigationManager.NavigateTo("/fetchdata");
+        NavigationManager.NavigateTo($"/fetchdata?email={email}&password={password}");
         showPopup = false;
     }
 }
