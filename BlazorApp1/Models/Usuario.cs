@@ -10,7 +10,8 @@ namespace BlazorApp1.Models
         "NOMBREUSUARIO":"CT CONSER JAIME MOLA",
         "PERFIL":"CONTADOR",
         "OBSERVACION":"INGRESO EXITOSO",
-        "CODIGOPERFIL":81,"ESTADO":"A",
+        "CODIGOPERFIL":81,
+        "ESTADO":"A",
         "COMPANIA":17,
         "Emisor":17,
         "Cargo":81,
@@ -24,10 +25,10 @@ namespace BlazorApp1.Models
         public string Perfil { get; set; }
         public string Observacion { get; set; }
         public int CodigoPerfil { get; set; }
+        public string Estado { get; set; }
         public int Compania { get; set; }
         public int Emisor { get; set; }
         public int Cargo { get; set; }
-        //public string Estado { get; set; }
         public string NombreEmisor { get; set; }
         public string NombreCompania { get; set; }
         public string UsuarioCliente { get; set; }
