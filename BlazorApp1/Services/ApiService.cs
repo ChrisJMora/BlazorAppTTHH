@@ -28,18 +28,43 @@ namespace BlazorApp1.Services
 
         public async Task<List<Emisor>?> ObtenerEmisores()
         {
-            HttpResponseMessage response = await client.GetAsync(_url + "api/Varios/GetEmisor");
-            if (response.IsSuccessStatusCode)
+            try
             {
-                // JSON como string
-                string json = await response.Content.ReadAsStringAsync();
-                // Deserializar el JSON a una lista 
-                List<Emisor>? datos = JsonConvert.DeserializeObject<List<Emisor>>(json);
-                if (datos != null) return datos;
+                HttpResponseMessage response = await client.GetAsync(_url + "api/Varios/GetEmisor");
+                if (response.IsSuccessStatusCode)
+                {
+                    // JSON como string
+                    string json = await response.Content.ReadAsStringAsync();
+                    // Deserializar el JSON a una lista 
+                    List<Emisor>? datos = JsonConvert.DeserializeObject<List<Emisor>>(json);
+                    if (datos != null) return datos;
+                }
+            } catch (Exception ex)
+            {
+                throw;
             }
+            
             return null;
         }
 
+        public async Task<Usuario?> ObtenerUsuario(String user, String password)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(_url + $"api/Usuarios?usuario={user}&password={password}");
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = await response.Content.ReadAsStringAsync();
+                    Usuario? datos = JsonConvert.DeserializeObject<Usuario>(json);
+                    if (datos != null) return datos;
+                }
+            } catch(Exception ex)
+            {
+                throw;
+            }
+            
+            return null;
+        }
 
 
     }

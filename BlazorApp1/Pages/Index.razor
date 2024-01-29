@@ -1,10 +1,9 @@
 ﻿@page "/"
 @inject NavigationManager NavigationManager
 
-@{
-    @using BlazorApp1.Services;
-    @using BlazorApp1.Models;
-}
+@using BlazorApp1.Services;
+@using BlazorApp1.Models;
+
 
 <h1 class="login-header">Ingresar Credenciales</h1>
 
@@ -13,21 +12,21 @@
     <p class="error-message">@errorMessage</p>
 }
 
-<EditForm model="@usuario" OnValidSubmit="@RedirectPage">
+<EditForm model="@formModel" OnValidSubmit="@RedirectPage">
     <DataAnnotationsValidator />
 
     <div  class="container">
         <div class="login-container">
             <div class="form-group">
                 <label for="Email" class="form-label">Correo:</label>
-                <InputText id="Email" @bind-Value="usuario.Email" class="form-input" />
-                <ValidationMessage For="@(() => usuario.Email)" /> 
+                <InputText id="Email" @bind-Value="formModel.Email" class="form-input" />
+                <ValidationMessage For="@(() => formModel.Email)" /> 
             </div>
 
             <div class="form-group">
                 <label for="Password" class="form-label">Contraseña:</label>
-                <InputText type="password" id="Password" @bind-Value="usuario.Password" class="form-input" />
-                <ValidationMessage For="@(() => usuario.Password)" /> 
+                <InputText type="password" id="Password" @bind-Value="formModel.Password" class="form-input" />
+                <ValidationMessage For="@(() => formModel.Password)" /> 
             </div>
 
             <div>
@@ -53,39 +52,62 @@
     </div>
 </EditForm>
 
+@if (showPopup)
+{
+    <div class="popup">
+        <div class="popup-content">
+            <span class="close" @onclick="ClosePopup">&times;</span>
+            <p>User Information: </p>
+            <p>Name: @userInfo?.NombreUsuario</p>
+            <p>Profile: @userInfo?.Perfil</p>
+        </div>
+    </div>
+}
+
 
 @code {
     private Usuario usuario = new Usuario();
+    private UsuarioFormulario formModel = new UsuarioFormulario();
     private string? errorMessage;
 
     private List<Emisor>? emisores;
+    private bool showPopup = false;
+    private Usuario? userInfo;
+
 
     protected override async Task OnInitializedAsync()
     {
-        emisores = await ApiService.Singleton().ObtenerEmisores();
-    }
-
-    private bool ValidateCredentials(string email, string password)
-    {
-        if (!string.IsNullOrEmpty(email.Trim()) || !string.IsNullOrEmpty(password.Trim()))
+        try
         {
-            //Poner aqui la petición http para validar las credenciales
-
-            return true;
-        } 
-        return false;
-        
-
-    }
-
-    private void RedirectPage()
-    {
-        if (ValidateCredentials(usuario.Email, usuario.Password))
+            emisores = await ApiService.Singleton().ObtenerEmisores();
+            errorMessage = "";
+        } catch (Exception e)
         {
-            NavigationManager.NavigateTo("/fetchdata");
-        } else
-        {
-            errorMessage = "Credenciales incorrectas! Por favor, intente de nuevo";
+            errorMessage = "No se pudo obtener los emisores. \nSistema fuera de línea\nIntente más tarde.";
         }
     }
+
+
+    private async Task RedirectPage()
+    {
+        try
+        {
+            userInfo = await ApiService.Singleton().ObtenerUsuario(formModel.Email, formModel.Password);
+            errorMessage = "";
+            if (userInfo == null) errorMessage = "No se encontró el usuario.";
+            else errorMessage = "";
+            showPopup = true;
+        } catch
+        {
+            errorMessage = "No se encontró el usuario.";
+        }
+    }
+
+    private void ClosePopup()
+    {
+        showPopup = false;
+    }
+
+
+
 }
