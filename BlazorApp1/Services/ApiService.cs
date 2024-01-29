@@ -1,5 +1,4 @@
 ﻿using BlazorApp1.Models;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace BlazorApp1.Services
@@ -47,24 +46,37 @@ namespace BlazorApp1.Services
             return null;
         }
 
-        public async Task<Usuario?> ObtenerUsuario(String user, String password)
+public async Task<IEnumerable<Usuario>> ObtenerUsuarios(string user, string password)
+{
+    try
+    {
+        HttpResponseMessage response = await client.GetAsync(_url + $"api/Usuarios?usuario={user}&password={password}");
+        // Verificar si la respuesta es exitosa
+        if (response.IsSuccessStatusCode)
         {
-            try
-            {
-                HttpResponseMessage response = await client.GetAsync(_url + $"api/Usuarios?usuario={user}&password={password}");
-                if (response.IsSuccessStatusCode)
-                {
-                    string json = await response.Content.ReadAsStringAsync();
-                    Usuario? datos = JsonConvert.DeserializeObject<Usuario>(json);
-                    if (datos != null) return datos;
-                }
-            } catch(Exception ex)
-            {
-                throw;
-            }
-            
-            return null;
+            string json = await response.Content.ReadAsStringAsync();
+            // Deserializar el JSON a una lista de usuarios
+            var usuarios = JsonConvert.DeserializeObject<List<Usuario>>(json) 
+                // En caso de que la lista sea nula, lanzar una excepción
+                ?? throw new Exception("La lista de usuarios es nula");
+            return usuarios;
         }
+        else
+        {
+            // Handle unsuccessful response
+            var errorResponse = await response.Content.ReadAsStringAsync();
+            throw new Exception($"HTTP request failed with status code {response.StatusCode}. Error: {errorResponse}");
+        }
+    }
+    catch (Exception ex)
+    {
+        // Log and rethrow exceptions
+        Console.WriteLine($"Error al obtener los usuarios: {ex.Message}");
+        throw;
+    }
+}
+
+
 
 
     }

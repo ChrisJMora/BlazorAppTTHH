@@ -57,10 +57,18 @@
     <div class="popup">
         <div class="popup-content">
             <span class="close" @onclick="ClosePopup">&times;</span>
-            <p>User Information: </p>
-            <p>Name: @userInfo?.NombreUsuario</p>
-            <p>Profile: @userInfo?.Perfil</p>
+            <p>Información de los usuarios: </p>
+
         </div>
+        @if (!usersInfo.Any())
+        {
+            <p>No se encontraron usuarios.</p>
+        }
+        @foreach (var user in usersInfo)
+        {
+            <p>Name: @user?.NombreUsuario</p>
+            <p>Profile: @user?.Perfil</p>
+        }
     </div>
 }
 
@@ -72,7 +80,7 @@
 
     private List<Emisor>? emisores;
     private bool showPopup = false;
-    private Usuario? userInfo;
+    private IEnumerable<Usuario> usersInfo = new List<Usuario>();
 
 
     protected override async Task OnInitializedAsync()
@@ -81,7 +89,7 @@
         {
             emisores = await ApiService.Singleton().ObtenerEmisores();
             errorMessage = "";
-        } catch (Exception e)
+        } catch (Exception)
         {
             errorMessage = "No se pudo obtener los emisores. \nSistema fuera de línea\nIntente más tarde.";
         }
@@ -92,9 +100,9 @@
     {
         try
         {
-            userInfo = await ApiService.Singleton().ObtenerUsuario(formModel.Codigo, formModel.Password);
+            usersInfo = await ApiService.Singleton().ObtenerUsuarios(formModel.Codigo, formModel.Password);
             errorMessage = "";
-            if (userInfo == null) errorMessage = "No se encontró el usuario.";
+            if (usersInfo == null) errorMessage = "No se encontró el usuario.";
             else errorMessage = "";
             showPopup = true;
         } catch
