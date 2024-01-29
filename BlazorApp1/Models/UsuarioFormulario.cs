@@ -7,6 +7,7 @@ namespace BlazorApp1.Models
     {
         [Required(ErrorMessage = "El código de usuario es incorrecto.")]
         [MinLength(4, ErrorMessage = "El código se conforma de 4 dígitos")]
+        [MaxLength(4, ErrorMessage = "El código se conforma de 4 dígitos")]
         public string Codigo { get; set; }
 
         [Required(ErrorMessage = "La contraseña es obligatoria.")]
