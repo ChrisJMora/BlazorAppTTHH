@@ -18,9 +18,9 @@
     <div  class="container">
         <div class="login-container">
             <div class="form-group">
-                <label for="Email" class="form-label">Correo:</label>
-                <InputText id="Email" @bind-Value="formModel.Email" class="form-input" />
-                <ValidationMessage For="@(() => formModel.Email)" /> 
+                <label for="Codigo" class="form-label">Código:</label>
+                <InputText id="Codigo" @bind-Value="formModel.Codigo" class="form-input" />
+                <ValidationMessage For="@(() => formModel.Codigo)" /> 
             </div>
 
             <div class="form-group">
@@ -92,7 +92,7 @@
     {
         try
         {
-            userInfo = await ApiService.Singleton().ObtenerUsuario(formModel.Email, formModel.Password);
+            userInfo = await ApiService.Singleton().ObtenerUsuario(formModel.Codigo, formModel.Password);
             errorMessage = "";
             if (userInfo == null) errorMessage = "No se encontró el usuario.";
             else errorMessage = "";

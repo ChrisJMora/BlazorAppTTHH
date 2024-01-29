@@ -5,9 +5,9 @@ namespace BlazorApp1.Models
 {
     public class UsuarioFormulario
     {
-        [Required(ErrorMessage = "La dirección de correo es obligatoria.")]
-        [EmailAddress(ErrorMessage = "La dirección de correo electrónico no es válida.")]
-        public string Email { get; set; }
+        [Required(ErrorMessage = "El código de usuario es incorrecto.")]
+        [MinLength(4, ErrorMessage = "El código se conforma de 4 dígitos")]
+        public string Codigo { get; set; }
 
         [Required(ErrorMessage = "La contraseña es obligatoria.")]
         [PasswordPropertyText]
