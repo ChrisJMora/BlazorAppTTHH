@@ -2,6 +2,7 @@
 @inject NavigationManager NavigationManager
 
 @using BlazorApp1.Services;
+@using BlazorApp1.Models.FlyweightUsuario;
 @using BlazorApp1.Models;
 
 
@@ -67,7 +68,7 @@
         @foreach (var user in usersInfo)
         {
             <p>Name: @user?.NombreUsuario</p>
-            <p>Profile: @user?.Perfil</p>
+            <p>Profile: @user?.TipoUsuario.Perfil</p>
         }
     </div>
 }

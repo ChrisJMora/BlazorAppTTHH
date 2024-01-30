@@ -1,4 +1,5 @@
 ﻿using BlazorApp1.Models;
+using BlazorApp1.Models.FlyweightUsuario;
 using Newtonsoft.Json;
 
 namespace BlazorApp1.Services
@@ -55,10 +56,17 @@ public async Task<IEnumerable<Usuario>> ObtenerUsuarios(string user, string pass
         if (response.IsSuccessStatusCode)
         {
             string json = await response.Content.ReadAsStringAsync();
-            // Deserializar el JSON a una lista de usuarios
+            // Deserializa el JSON en una lista de tipos de usuarios
+            var tiposUsuario = JsonConvert.DeserializeObject<List<TipoUsuario>>(json) 
+                // En caso de que la lista sea nula, lanzar una excepción
+                ?? throw new Exception("La lista de tipos de usuarios es nula");
+            // Deserializa el JSON en una lista  de usuarios
             var usuarios = JsonConvert.DeserializeObject<List<Usuario>>(json) 
                 // En caso de que la lista sea nula, lanzar una excepción
                 ?? throw new Exception("La lista de usuarios es nula");
+
+            // Fabrica los usuarios con sus respecctivos tipos de usuarios
+            usuarios = FabricaUsuario.FabricarUsuarios(usuarios, tiposUsuario);
             return usuarios;
         }
         else
