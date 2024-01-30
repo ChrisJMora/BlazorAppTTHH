@@ -65,20 +65,20 @@ public async Task<IEnumerable<Usuario>> ObtenerUsuarios(string user, string pass
                 // En caso de que la lista sea nula, lanzar una excepción
                 ?? throw new Exception("La lista de usuarios es nula");
 
-            // Fabrica los usuarios con sus respecctivos tipos de usuarios
+            // Fabrica los usuarios con sus respecctivos tipos de usuario
             usuarios = FabricaUsuario.FabricarUsuarios(usuarios, tiposUsuario);
             return usuarios;
         }
         else
         {
-            // Handle unsuccessful response
+            // Maneja una respuesta inexistosa
             var errorResponse = await response.Content.ReadAsStringAsync();
             throw new Exception($"HTTP request failed with status code {response.StatusCode}. Error: {errorResponse}");
         }
     }
     catch (Exception ex)
     {
-        // Log and rethrow exceptions
+        // Regitra y envía el mensaje de error
         Console.WriteLine($"Error al obtener los usuarios: {ex.Message}");
         throw;
     }
