@@ -26,6 +26,9 @@ public class FabricaUsuario
     public static List<Usuario> FabricarUsuarios(List<Usuario> usuarios, List<TipoUsuario> tiposUsuario)
     {
         var usuariosEncontrados = new List<Usuario>();
+        // La lista de usuarios debe ser del mismo tamaño que la lista de tipos de usuario
+        if (usuarios.Count != tiposUsuario.Count) 
+            throw new Exception("No se puede fabricar usuarios con listas de tamaños diferentes.");
         for(int i = 0; i < usuarios.Count; i++)
         {
             usuariosEncontrados.Add(FabricarUsuario(usuarios[i], tiposUsuario[i]));

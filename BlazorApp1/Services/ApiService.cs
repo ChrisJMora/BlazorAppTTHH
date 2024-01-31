@@ -65,7 +65,7 @@ public async Task<IEnumerable<Usuario>> ObtenerUsuarios(string user, string pass
                 // En caso de que la lista sea nula, lanzar una excepción
                 ?? throw new Exception("La lista de usuarios es nula");
 
-            // Fabrica los usuarios con sus respecctivos tipos de usuario
+            // Fabrica los usuarios con sus respectivos tipos de usuario
             usuarios = FabricaUsuario.FabricarUsuarios(usuarios, tiposUsuario);
             return usuarios;
         }
